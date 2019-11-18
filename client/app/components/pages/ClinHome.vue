@@ -191,6 +191,10 @@ import workflowData  from '../../../data/workflows.json'
 import variantData   from '../../../data/variants_mosaic_platinum.json'
 import analysisData  from '../../../data/analysis.json'
 
+import axios from 'axios'
+import { saveAs } from 'file-saver'
+import { bus } from '../../routes'
+
 export default {
   name: 'home',
   components: {
@@ -253,21 +257,21 @@ export default {
 
       appUrls: {
         'localhost': {
-            'gene':      'https://localhost:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
-            'genefull':  'http://localhost:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
-            'genepanel': 'http://localhost:4024/?launchedFromClin=true&frame_source=' + window.document.URL,
-            //'bam':       'http://localhost:4027'
+          'gene':      'https://localhost:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
+          'genefull':  'http://localhost:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
+          'genepanel': 'http://localhost:4024/?launchedFromClin=true&frame_source=' + window.document.URL,
+          //'bam':       'http://localhost:4027'
         },
         'tony.iobio.io': {
-            'gene':      'http://tony.iobio.io:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
-            'genefull':  'http://tony.iobio.io:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
-            'genepanel': 'http://tony.iobio.io:4024/?launchedFromClin=true&frame_source=' + window.document.URL,
-            //'bam':       'http://tony.iobio.io:4027'
+          'gene':      'http://tony.iobio.io:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
+          'genefull':  'http://tony.iobio.io:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
+          'genepanel': 'http://tony.iobio.io:4024/?launchedFromClin=true&frame_source=' + window.document.URL,
+          //'bam':       'http://tony.iobio.io:4027'
         },
         'dev': {
             'gene':      'https://stage.gene.iobio.io/?launchedFromClin=true&frame_source=' + window.document.URL,
             'genefull':  'https://stage.gene.iobio.io/?launchedFromClin=true&frame_source=' + window.document.URL,
-            'genepanel': 'https://stage.genepanel.iobio.io/?launchedFromClin=true&frame_source=' + window.document.URL,
+            'genepanel': 'https://dev.panel.iobio.io/?launchedFromClin=true&frame_source=' + window.document.URL,
             //'bam':       'https://newbam.iobio.io'
         },
       },
@@ -319,6 +323,9 @@ export default {
   mounted: function() {
     this.init();
 
+    bus.$on("getAnalysisObject", ()=>{
+      this.generatePDF()
+    })
   },
 
   computed: {
@@ -402,7 +409,6 @@ export default {
 
     init: function() {
       let self = this;
-
       var appTarget = null;
       if (window.document.URL.indexOf("localhost") > 0) {
         appTarget = "localhost";
@@ -414,7 +420,6 @@ export default {
       //self.apps.bam.url       = self.appUrls[appTarget].bam;
       self.apps.genepanel.url     = self.appUrls[appTarget].genepanel;
       self.apps.genefull.url      = self.appUrls[appTarget].genefull;
-
       window.addEventListener("message", self.receiveAppMessage, false);
 
       self.promiseIFramesMounted()
@@ -1282,6 +1287,15 @@ export default {
       } else {
         return [];
       }
+    },
+
+    generatePDF: function(){
+      axios.post('http://nv-dev-new.iobio.io/analysistoreport/create-pdf', this.analysis)
+        .then(()=> axios.get('http://nv-dev-new.iobio.io/analysistoreport/fetch-pdf', { responseType: 'blob' }))
+        .then((res) => {
+          const pdfBlob = new Blob([res.data], { type: 'application/pdf' })
+          saveAs(pdfBlob, "analysis.pdf")
+        })
     }
 
   }
