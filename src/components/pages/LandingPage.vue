@@ -16,15 +16,15 @@
         <v-icon>play_circle_outline</v-icon>
         <span class="ml-1">Watch video</span>
       </v-btn>
-      
+
       <v-btn @click="onShowTermsOfService" color="rgb(69, 69, 69)" class="ml-4" icon title="Terms of Service">
         <v-icon>description</v-icon>
       </v-btn>
-      
+
       <MoreMenu class="ml-4" landingPage="true" />
 
     </v-app-bar>
-    
+
     <v-content>
       <v-layout row wrap>
         <v-flex d-flex xs12>
@@ -39,15 +39,15 @@
                       </h1>
                       <br>
                       <span class="i-hero_subheading">
-                        clin.iobio makes it easy to review sequencing and case metrics, generate a prioritized list of genes associated with the disease/phenotype, review candidate variants, and generate a report of your findings                      
+                        clin.iobio makes it easy to review sequencing and case metrics, generate a prioritized list of genes associated with the disease/phenotype, review candidate variants, and generate a report of your findings
                       </span>
                       <br>
                       <v-btn color="white" outlined x-large @click="getStarted" class="mt-8">
-                        <v-icon>explore</v-icon> 
+                        <v-icon>explore</v-icon>
                         <span class="ml-2">RUN WITH DEMO DATA</span>
                       </v-btn>
                       <v-btn color="white" outlined x-large @click="inputOptionsDialog=true" class="mt-8 ml-4">
-                        <v-icon>fas fa-upload</v-icon> 
+                        <v-icon>fas fa-upload</v-icon>
                         <span class="ml-2">LOAD YOUR DATA</span>
                       </v-btn>
                     </v-flex>
@@ -64,12 +64,12 @@
             </v-responsive>
         </v-flex>
       </v-layout>
-      
+
       <v-layout row wrap style="background:white">
         <v-container>
           <v-layout row wrap>
             <v-flex xs12 sm12 md2 lg2 xl2>
-              
+
               <v-list rounded class="hidden-sm-and-down">
                 <v-subheader>
                   <strong style="font-size:18px">Workflow steps</strong>
@@ -88,11 +88,11 @@
               </v-list>
             </v-flex>
             <v-flex xs12 sm12 md10 lg10 xl10>
-              <hooper 
-                :vertical="true" 
-                style="height: 400px; background:white" 
-                :itemsToShow="1" 
-                :centerMode="true" 
+              <hooper
+                :vertical="true"
+                style="height: 400px; background:white"
+                :itemsToShow="1"
+                :centerMode="true"
                 :transition="1050"
                 ref="carousel"
                 @slide="updateCarousel"
@@ -103,7 +103,7 @@
                     :title="slide.title"
                     :description="slide.description"
                     :img_src="slide.img_src"
-                  > 
+                  >
                     <component :is="slide.icon"></component>
                   </landing-page-slide>
                 </slide>
@@ -112,14 +112,14 @@
           </v-layout>
         </v-container>
       </v-layout>
-      
-      
+
+
       <v-dialog
         v-model="videoDialog"
         max-width="600"
       >
         <v-card>
-       
+
           <v-card-title class="headline"></v-card-title>
 
           <v-card-text v-if="videoDialog">
@@ -140,14 +140,14 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      
+
       <NavBarDialog
         v-if="showTermsOfService"
         :headline="terms.headline"
         :content="terms.content"
         id="TermsDialogLandingPage">
       </NavBarDialog>
-      
+
       <!-- input options dialog -->
       <v-dialog
         v-model="inputOptionsDialog"
@@ -157,7 +157,7 @@
       >
         <v-card class="full-width" style="height: auto;overflow-y:scroll">
           <v-card-title primary-title>
-            
+
           </v-card-title>
           <v-card-text>
             <div class="container">
@@ -175,7 +175,7 @@
         </v-card>
       </v-dialog>
       <!-- end input options dialog -->
-      
+
       <!-- import configuration dialog -->
       <v-dialog
         v-model="importConfigurationDialog"
@@ -185,15 +185,15 @@
       >
         <v-card class="full-width" style="height: auto;overflow-y:scroll">
           <v-card-title primary-title>
-            
+
           </v-card-title>
           <v-card-text>
             <div class="container">
-              <v-file-input 
-                @change="importSavedInputConfig"  
+              <v-file-input
+                @change="importSavedInputConfig"
                 accept=".json,"
-                label="Saved input configuration" 
-                v-model="savedInputConfig" 
+                label="Saved input configuration"
+                v-model="savedInputConfig"
                 show-size counter>
                 <template v-slot:selection="{ text }">
                   <v-chip
@@ -208,13 +208,13 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="savedInputConfig=false" text>close</v-btn>
+            <v-btn color="primary" @click="savedInputConfig=false; importConfigurationDialog = false" text>close</v-btn>
             <v-btn color="primary" @click="loadFromConfigInput" :disabled="!validateSavedConfig && savedInputConfig==null">Load</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- end input configuration dialog -->
-      
+
       <!-- caseDescriptionDialog -->
       <v-dialog v-model="caseDescriptionDialog" v-if="pageCounter===1" persistent max-width="890">
         <v-card class="full-width" style="height: auto;overflow-y:scroll">
@@ -237,13 +237,13 @@
                 solo
                 v-model="caseTitle"
               ></v-text-field>
-              
+
               <label>Project Description </label>
               <v-textarea
                 solo auto-grow
                 name="input-7-4"
                 label="The data set (NA12878) is high quality exome sequencing data from three individuals"
-                v-model="caseDescription"					
+                v-model="caseDescription"
               ></v-textarea>
           </v-col>
           <v-card-actions>
@@ -256,9 +256,9 @@
         </v-card>
       </v-dialog>
       <!-- End caseDescriptionDialog -->
-      
 
-      
+
+
       <files-dialog
         v-if="showFiles && pageCounter===2"
        :cohortModel="cohortModel"
@@ -271,8 +271,8 @@
        :pageCounter="pageCounter"
       >
       </files-dialog>
-      
-      
+
+
       <!-- Genes set dialog -->
       <v-dialog v-model="geneSetDiialog" v-if="pageCounter===3" persistent max-width="890">
         <v-card class="full-width" style="height: auto;overflow-y:scroll">
@@ -292,7 +292,7 @@
                 solo auto-grow
                 name="input-7-4"
                 label="Enter Genes"
-                v-model="genes"					
+                v-model="genes"
               ></v-textarea>
           </v-col>
           <v-card-actions>
@@ -305,7 +305,7 @@
         </v-card>
       </v-dialog>
       <!-- End gene sets dialog -->
-      
+
       <!-- Pedigree upload dialog -->
       <v-dialog v-model="pedigreeUploadDialog" v-if="pageCounter===4" persistent max-width="890">
         <v-card class="full-width" style="height: auto;overflow-y:scroll">
@@ -417,36 +417,36 @@ export default {
         { text: 'Review variants' },
         { text: 'Report findings' },
       ],
-      videoDialog: false, 
+      videoDialog: false,
       slides: [
         {
-          title: "Review case", 
-          img_src: review_case_img, 
+          title: "Review case",
+          img_src: review_case_img,
           description: "Review relatedness, disease/phenotype description, and data quality.",
           icon: caseIcon
-        }, 
+        },
         {
-          title: "Select phenotypes", 
-          img_src: review_phenotypes_img, 
+          title: "Select phenotypes",
+          img_src: review_phenotypes_img,
           description: "Enter a clinical note and select suspected disorders and phenotypes to generate a prioritized gene list.",
           icon: phenotypeIcon
-        }, 
+        },
         {
-          title: "Review variants", 
-          img_src: review_variants_img, 
+          title: "Review variants",
+          img_src: review_variants_img,
           description: "Review and attach significance to candidate variants. Promote collaboration by adding notes for colleagues.",
           icon: variantsIcon
-        }, 
+        },
         {
-          title: "Report findings", 
-          img_src: findings_img, 
+          title: "Report findings",
+          img_src: findings_img,
           description: "Look over all aspects of the workflow and reviewed variants and generate a downloadable report.",
           icon: findingsIcon
-        }, 
-      ], 
+        },
+      ],
       showTermsOfService: false,
       terms: {
-        headline: "Terms of service", 
+        headline: "Terms of service",
         content: `<strong>Academic Use </strong>
           <br> clin.iobio is free for academic use.
           <br><br>
@@ -459,12 +459,12 @@ export default {
       geneSetDiialog: false,
       genes: '',
       customModelInfos: [],
-      showFiles: false, 
-      pageCounter: 1, 
-      pedigreeUploadDialog: false, 
+      showFiles: false,
+      pageCounter: 1,
+      pedigreeUploadDialog: false,
       pedData: null,
       caseDescriptionDialog: false,
-      caseDescription: '', 
+      caseDescription: '',
       caseTitle: '',
       savedInputConfig: null,
       inputOptionsDialog: false,
@@ -486,52 +486,52 @@ export default {
     addCaseDescription: function() {
       this.caseDescriptionDialog = false;
       this.pageCounter = this.pageCounter+1;
-      this.showFiles = true; 
+      this.showFiles = true;
       this.$emit("set-custom-case-summary", {
-        name: this.caseTitle, 
+        name: this.caseTitle,
         description: this.caseDescription
       })
     },
     closeCaseDescription: function() {
       this.caseDescriptionDialog = false;
-      this.pageCounter = 1; 
-    }, 
+      this.pageCounter = 1;
+    },
     onFilesLoaded: function(analyzeAll) {
       this.showFiles = false;
-      this.pageCounter = this.pageCounter+1; 
+      this.pageCounter = this.pageCounter+1;
       this.geneSetDiialog = true
       this.$emit("on-files-loaded", analyzeAll);
     },
     backToCaseDescription: function(){
       this.showFiles = false;
       this.pageCounter = 1;
-      this.onShowFiles(); 
+      this.onShowFiles();
     },
     addGeneSet: function(){
-      this.pageCounter = this.pageCounter+1;  
+      this.pageCounter = this.pageCounter+1;
       this.geneSetDiialog = false;
-      this.geneSet = this.genes.split(",").map(gene => gene.trim().toUpperCase()); 
+      this.geneSet = this.genes.split(",").map(gene => gene.trim().toUpperCase());
       this.$emit('setGeneSet', this.geneSet)
-      this.pedigreeUploadDialog = true; 
+      this.pedigreeUploadDialog = true;
     },
     backToFiles: function(){
       this.geneSetDiialog = false;
       this.pageCounter = 2;
-      this.showFiles = true; 
-    },  
+      this.showFiles = true;
+    },
     uploadedPedTxt(ped){
-      this.pedData = ped; 
-    }, 
+      this.pedData = ped;
+    },
     addPedigree(){
-      this.pedigreeUploadDialog = false; 
-      this.$emit("set-ped-data", this.pedData); 
+      this.pedigreeUploadDialog = false;
+      this.$emit("set-ped-data", this.pedData);
       this.getStarted();
     },
     backToGeneSets: function(){
       this.pedigreeUploadDialog = false;
       this.pageCounter = 3;
       this.geneSetDiialog = true;
-    }, 
+    },
     onLoadDemoData: function(loadAction) {
       this.$emit("load-demo-data", loadAction);
     },
@@ -540,28 +540,28 @@ export default {
     },
     getModelInfoMap: function(modelInfoMap, vcfUrls, tbiUrls, bamUrls, baiUrls){
       for(var model in modelInfoMap){
-        var obj = {}; 
-        obj.relationship = model 
+        var obj = {};
+        obj.relationship = model
         obj.affectedStatus = modelInfoMap[model].isAffected
-        obj.name = modelInfoMap[model].name 
-        obj.sample = modelInfoMap[model].sample 
-        obj.sex = "" 
+        obj.name = modelInfoMap[model].name
+        obj.sample = modelInfoMap[model].sample
+        obj.sex = ""
         var vcf = modelInfoMap[model].vcf !== undefined ? modelInfoMap[model].vcf : vcfUrls[model];
-        obj.vcf = vcf 
+        obj.vcf = vcf
         var tbi = modelInfoMap[model].tbi !== undefined ? modelInfoMap[model].tbi : tbiUrls[model];
-        obj.tbi = tbi 
+        obj.tbi = tbi
         obj.bam = bamUrls[model]
         obj.bai = baiUrls[model]
         this.customModelInfos.push(obj)
       }
       console.log("this.customModelInfos", this.customModelInfos)
-      this.$emit("custom-model-info",this.customModelInfos); 
-    }, 
+      this.$emit("custom-model-info",this.customModelInfos);
+    },
     getStarted(){
       bus.$emit("initialize-clin")
-    }, 
+    },
     updateCarousel(payload) {
-      var currentSlide; 
+      var currentSlide;
       typeof payload === "number" ? currentSlide = payload : currentSlide = payload.currentSlide;
       this.carouselData = currentSlide;
     },
@@ -572,16 +572,16 @@ export default {
       this.showTermsOfService = true;
     },
     closeUploadDataDialogs: function(){
-      this.caseDescriptionDialog = false; 
-      this.showFiles = false; 
-      this.geneSetDiialog = false; 
+      this.caseDescriptionDialog = false;
+      this.showFiles = false;
+      this.geneSetDiialog = false;
       this.pedigreeUploadDialog = false;
-      this.pageCounter = 1; 
-    }, 
+      this.pageCounter = 1;
+    },
     saveAsConfig: function(){
       this.$emit("set-ped-data", this.pedData);
-      bus.$emit("save-input-config"); 
-    }, 
+      bus.$emit("save-input-config");
+    },
     importSavedInputConfig(ev) {
       var reader = new FileReader();
       if(this.savedInputConfig){
@@ -590,7 +590,7 @@ export default {
           let data = reader.result;
           this.configCustomData = JSON.parse(data);
           if(typeof this.configCustomData === "object"){
-            this.validateSavedConfig = true; 
+            this.validateSavedConfig = true;
           }
         }
       }
@@ -607,14 +607,14 @@ export default {
         fetch(url)
           .then(res => {
             if(!res.ok){
-              alert("Please enter a correct URL or a presigned URL that can be accessed."); 
+              alert("Please enter a correct URL or a presigned URL that can be accessed.");
             }
             else{
-              return res.text(); 
+              return res.text();
             }
           })
            .then(ped => {
-             console.log("ped data is: ", ped); 
+             console.log("ped data is: ", ped);
              this.pedData = ped;
            })
            .catch(error => console.log(error))
@@ -626,18 +626,18 @@ export default {
   },
   mounted: function() {
     bus.$on("close_dialog", ()=>{
-      this.showTermsOfService = false; 
+      this.showTermsOfService = false;
     })
     bus.$on("close-files-dialog", ()=>{
-      this.closeUploadDataDialogs(); 
+      this.closeUploadDataDialogs();
     })
     fetch("https://raw.githubusercontent.com/mvelinder/ped_draw/master/examples/platinum.ped")
       .then(res => {
         if(!res.ok){
-          alert("Please enter a correct URL or a presigned URL that can be accessed."); 
+          alert("Please enter a correct URL or a presigned URL that can be accessed.");
         }
         else{
-          return res.text(); 
+          return res.text();
         }
       })
         .then(data => console.log(data))
@@ -649,7 +649,7 @@ export default {
       setTimeout(()=>{
         this.step_number = this.carouselData;
       },50)
-      
+
     },
     step_number(){
     }
@@ -665,122 +665,122 @@ export default {
 .overview-jumbotron
   height: 530px !important
   background: radial-gradient(#30638E, #2D4B64)
-  
+
 .i-hero_text
-  text-align: center  
+  text-align: center
   margin-top: 95px
   color: rgb(242, 242, 242)
   // padding: 10px
-  
+
   .i-hero_subheading
     font-size: 19px
-    
-  
+
+
 .i-hooper_subheading
   font-size: 18px !important
   font-weight: 200
-  
+
 .hooper-progress-inner
-  background-color: $app-button-color !important  
+  background-color: $app-button-color !important
   height: 7px
-  border-top-left-radius: 8px 
+  border-top-left-radius: 8px
   border-bottom-left-radius: 8px
 
 .hooper-progress
   height: 7px !important
-  border-radius: 8px  
-  
+  border-radius: 8px
+
 .step-heading-icon
-  margin-top: 10px 
-  
-  svg 
+  margin-top: 10px
+
+  svg
     height: 44px
     width: 44px
     position: absolute
     padding-top: 5px
-  
+
 .i-hooper_text
   font-size: 32px !important
-  font-family: poppins !important  
+  font-family: poppins !important
   font-weight: 300
   position: absolute
-  margin-left: 55px  
-  
+  margin-left: 55px
+
 @media (min-width: 960px)
   .i-hooper_img
-    width: 480px  
-  
-  .i-hooper_text_margin_top
-    margin-top: 50px !important  
-    
-  .i-hooper_text
-    font-size: 24px !important
-    font-family: poppins !important  
-    font-weight: 300
-    position: absolute
-    margin-left: 55px  
-  
-    
-@media (min-width: 1050px)
-  .i-hooper_img
-    width: 520px  
-  
+    width: 480px
+
   .i-hooper_text_margin_top
     margin-top: 50px !important
-      
+
+  .i-hooper_text
+    font-size: 24px !important
+    font-family: poppins !important
+    font-weight: 300
+    position: absolute
+    margin-left: 55px
+
+
+@media (min-width: 1050px)
+  .i-hooper_img
+    width: 520px
+
+  .i-hooper_text_margin_top
+    margin-top: 50px !important
+
   .clinical_art
     width: 530px
     right: 0
-    margin-top: 72px       
-      
+    margin-top: 72px
+
 
 @media (min-width: 1264px)
   .i-hooper_img
-    width: 620px      
-    
+    width: 620px
+
   .i-hooper_text_margin_top
-    margin-top: 80px !important   
-  
+    margin-top: 80px !important
+
   .i-hooper_text
     font-size: 32px !important
-    font-family: poppins !important  
+    font-family: poppins !important
     font-weight: 300
     position: absolute
-    margin-left: 55px  
-    
+    margin-left: 55px
+
   .clinical_art
     width: 560px
     right: 0
-    margin-top: 72px  
-      
-    
+    margin-top: 72px
+
+
 @media (min-width: 1440px)
   .i-hooper_img
-    width: 720px    
-    
+    width: 720px
+
   .i-hooper_text_margin_top
-    margin-top: 80px !important  
-    
+    margin-top: 80px !important
+
   .clinical_art
     width: 580px
     right: 0
     margin-top: 72px
-    
+
 @media (min-width: 1550px)
   .i-hooper_img
-    width: 720px    
-    
+    width: 720px
+
   .i-hooper_text_margin_top
-    margin-top: 80px !important  
-    
+    margin-top: 80px !important
+
   .clinical_art
     width: 605px
     right: 0
-    margin-top: 72px    
+    margin-top: 72px
 </style>
 
 <style lang="sass">
-  .v-label 
+  .v-label
     font-size: 12px
     font-weight: 200
 </style>
