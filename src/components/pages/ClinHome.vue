@@ -1942,7 +1942,7 @@ export default {
             message = "Error parsing config file.  Extension for bam file " + sample.bam + " was not recognized";
             bool = false;
           }
-          if(vcfExt !== "vcf" || vcfExt !== "gz" ){
+          if(vcfExt !== "vcf" && vcfExt !== "gz" ){
             message = "Error parsing config file.  Extension for vcf file " + sample.vcf + " was not recognized";
             bool = false;
           }
