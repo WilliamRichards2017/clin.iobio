@@ -125,7 +125,7 @@ $horizontal-dashboard-height: 140px
 
 <template>
 <div id="application-content" :class="{'workflow-new': newWorkflow ? true : false}">
-  <landing-page 
+  <landing-page
     v-if="!launchedFromMosaic && showLandingPage"
     :cohortModel="cohortModel"
     @custom-model-info="customModelInfo"
@@ -134,6 +134,7 @@ $horizontal-dashboard-height: 140px
     @set-custom-case-summary="setCustomCaseSummary($event)"
     @load-saved-input-config="loadSavedInputConfig($event)">
   </landing-page>
+
   <navigation v-if="!showLandingPage && !showSplash && isAuthenticated  && workflow && analysis"
    :caseSummary="caseSummary"
    :analysis="analysis"
@@ -162,6 +163,25 @@ $horizontal-dashboard-height: 140px
    @on-task-changed="onTaskChanged"
    @on-task-completed="onTaskCompleted">
   </workflow-nav>
+
+
+  <v-snackbar
+          :timeout="snackbar.timeout"
+          :top="snackbar.top"
+          :bottom="snackbar.bottom"
+          :center="snackbar.center"
+          :left="snackbar.left"
+          :right="snackbar.right"
+          v-model="showSnackbar"
+  >
+    <span v-html="snackbar.message"></span>
+    <v-btn
+            v-if="snackbar.close" flat color="white"
+            @click.native="showSnackbar = false">
+      <v-icon>close</v-icon>
+    </v-btn>
+
+  </v-snackbar>
 
   <div id="clin-container" style="display:flex" :class="{authenticated: isAuthenticated}">
 
@@ -261,24 +281,6 @@ $horizontal-dashboard-height: 140px
         style="width:100%;height:100%" frameBorder="0">
         </iframe>
       </div>
-
-      <v-snackbar
-        :timeout="snackbar.timeout"
-        :top="snackbar.top"
-        :bottom="snackbar.bottom"
-        :center="snackbar.center"
-        :left="snackbar.left"
-        :right="snackbar.right"
-        v-model="showSnackbar"
-       >
-        <span v-html="snackbar.message"></span>
-        <v-btn
-          v-if="snackbar.close" flat color="white"
-          @click.native="showSnackbar = false">
-          <v-icon>close</v-icon>
-        </v-btn>
-
-      </v-snackbar>
 
       <LoadingDialog
         v-if="generatingReport"
@@ -406,7 +408,7 @@ export default {
       variantsByInterpretation: [],
 
       showFindings: false,
-      
+
       appUrls: {
         'localhost': {
           'gene':      'http://localhost:4026/?launchedFromClin=true&frame_source=' + window.document.URL,
@@ -466,7 +468,7 @@ export default {
       allVarCounts: null,
       coverageHistos: null,
       venn_diag_data: {},
-      geneToDelete: '', 
+      geneToDelete: '',
 
 
       interpretationMap: {
@@ -480,8 +482,8 @@ export default {
       reviewCaseBadges: null,
       generatingReport: false,
       cohortModel: null,
-      customData: false, 
-      customGeneSet: [], 
+      customData: false,
+      customGeneSet: [],
 
     }
 
@@ -506,7 +508,7 @@ export default {
       }, 2000)
     })
     bus.$on("save-input-config", ()=>{
-      this.saveAsInputConfig(); 
+      this.saveAsInputConfig();
     })
   },
 
@@ -635,7 +637,7 @@ export default {
           // TODO - genome build is required
           self.genomeBuildHelper.setCurrentBuild("GRCh37")
         }
-        
+
         let glyph = new Glyph();
         let translator = new Translator(self.globalApp, glyph);
         let genericAnnotation = new GenericAnnotation(glyph);
@@ -720,7 +722,7 @@ export default {
             self.splashMessage = error;
           })
         } else {
-          self.params.source = ""; 
+          self.params.source = "";
           self.showLandingPage = true;
           self.modelInfos = self.demoModelInfos;
           self.user       = self.demoUser;
@@ -1026,7 +1028,7 @@ export default {
         if (self.paramGeneBatchSize && (appName == 'gene' || appName == 'genefull')) {
           msgObject.batchSize = +self.paramGeneBatchSize;
         }
-        
+
         console.log("ClinHome.setData  " + appName + " msgObject is: " + msgObject.modelInfo)
 
 
@@ -1398,10 +1400,10 @@ export default {
                 newAnalysis.payload.genes.push(geneName);
               })
             } else if (self.params.genes) {
-              // Otherwise, if a gene set wasn't specified but a gene was, 
+              // Otherwise, if a gene set wasn't specified but a gene was,
               // initialize the genes to this single gene
               self.params.genes.split(",").forEach(function(geneName) {
-                newAnalysis.payload.genes.push(geneName);              
+                newAnalysis.payload.genes.push(geneName);
               })
             }
 
@@ -1807,6 +1809,7 @@ export default {
     },
 
     onShowSnackbar: function(snackbar) {
+
       if (snackbar && snackbar.message) {
         this.showSnackbar = true;
 
@@ -1845,64 +1848,133 @@ export default {
       this.reviewCaseBadges = badges;
     },
     gene_to_delete(gene){
-      this.geneToDelete = gene; 
+      this.geneToDelete = gene;
     },
 
     updateAverageCoverage(cov){
       this.averageCoverage = cov;
-    }, 
-    
-    customModelInfo(modelInfos){
-      this.modelInfos = modelInfos; 
-      this.customData = true; 
     },
-    
+
+    customModelInfo(modelInfos){
+      this.modelInfos = modelInfos;
+      this.customData = true;
+    },
+
     setGeneSet(geneSet){
-      this.customGeneSet = geneSet      
-    }, 
+      this.customGeneSet = geneSet
+    },
     setPedData(pedigree){
-      this.rawPedigree = pedigree; 
-    }, 
+      this.rawPedigree = pedigree;
+    },
     setCustomCaseSummary(caseSummary){
-      this.caseSummary = {}; 
-      this.caseSummary.name = caseSummary.name; 
-      this.caseSummary.description = caseSummary.description; 
-    }, 
+      this.caseSummary = {};
+      this.caseSummary.name = caseSummary.name;
+      this.caseSummary.description = caseSummary.description;
+    },
     saveAsInputConfig(){
       var configObj = {
         "caseSummary": this.caseSummary,
         "modelInfos": this.modelInfos,
         "customGeneSet": this.customGeneSet,
-        "rawPedigree": this.rawPedigree        
+        "rawPedigree": this.rawPedigree
       }
       console.log("obj", configObj);
       let configData = JSON.stringify(configObj);
-      const jsonBlob = new Blob([configData], { type: "application/json" }); 
+      const jsonBlob = new Blob([configData], { type: "application/json" });
       saveAs(jsonBlob, "clin-input-config.json")
     },
     importSavedInputConfig(ev){
       const file = ev.target.files[0];
       const reader = new FileReader();
       reader.onload = e => {
-        console.log("e.target.result;", e.target.result); 
+        console.log("e.target.result;", e.target.result);
         return e.target.result;
       }
       reader.readAsText(file);
     },
+
+    validateConfigFile(customData){
+      let bool = true;
+      let message = "";
+      if(customData.hasOwnProperty("caseSummary")){
+        if(!customData.caseSummary.hasOwnProperty("name")){
+          bool = false;
+          message = "Error parsing config file.  Could not interpret project name field (\"caseSummary\":{\"name\":\"\",\"description\":\"\"})";
+        }
+        if(!customData.caseSummary.hasOwnProperty("description")) {
+          bool = false;
+          message = "Error parsing config file.  Could not interpret description field (\"caseSummary\":{\"name\":\"\",\"description\":\"\"})" ;
+        }
+      }
+      else{
+        bool = false;
+        message = "Error parsing config file.  Could not interpret case summary field (\"caseSummary\":{\"name\":\"\",\"description\":\"\"})";
+
+      }
+
+      if(!customData.hasOwnProperty("rawPedigree")){
+        bool = false;
+        message = "Error parsing config file.  Could not interpret pedigree field (\"rawPedigree\": \"\")";
+
+      }
+      if(!customData.hasOwnProperty("customGeneSet")){
+        message = "Error parsing config file.  Could not interpret gene list field (\"customGeneSet\":[\"\"],)";
+
+        bool = false;
+      }
+      if(!customData.hasOwnProperty("modelInfos")){
+        message = "Error parsing config file.  Could not interpret files field (\"modelInfos\":[\"\"])";
+        bool = false;
+      }
+      else{
+
+        for(let i = 0; i < customData.modelInfos.length; i++) {
+          let sample = customData.modelInfos[i];
+
+
+          let bamExt = sample.bam.substr(sample.bam.lastIndexOf('.') + 1);
+          let vcfExt = sample.vcf.substr(sample.vcf.lastIndexOf('.') + 1);
+
+          if(bamExt !== ".bam"){
+            message = "Error parsing config file.  Extension for bam file " + sample.bam + " was not recognized";
+            bool = false;
+          }
+          if(vcfExt !== ".vcf"){
+            message = "Error parsing config file.  Extension for vcf file " + sample.vcf + " was not recognized";
+            bool = false;
+          }
+        }
+
+      }
+      let ret = {bool: bool, message: message};
+      return ret;
+
+    },
+
     loadSavedInputConfig(customData){
+
+      let validate = this.validateConfigFile(customData);
+
+      if(validate.bool){
+
       this.caseSummary = {};
-      this.caseSummary.name = customData.caseSummary.name; 
-      this.caseSummary.description = customData.caseSummary.description; 
-      this.rawPedigree = customData.rawPedigree; 
-      this.customGeneSet = customData.customGeneSet; 
-      this.modelInfos = customData.modelInfos; 
+      this.caseSummary.name = customData.caseSummary.name;
+      this.caseSummary.description = customData.caseSummary.description;
+      this.rawPedigree = customData.rawPedigree;
+      this.customGeneSet = customData.customGeneSet;
+      this.modelInfos = customData.modelInfos;
       this.customData = true;
-      
+
       this.showLandingPage = false;
       this.showSplash = true;
       setTimeout(()=>{
         this.onAuthenticated();
       }, 2000)
+    }
+      else{
+        this.onShowSnackbar( {message: validate.message,
+          timeout: 6000});
+      }
     }
   }
 }
