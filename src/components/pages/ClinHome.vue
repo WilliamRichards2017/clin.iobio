@@ -1935,11 +1935,14 @@ export default {
           let bamExt = sample.bam.substr(sample.bam.lastIndexOf('.') + 1);
           let vcfExt = sample.vcf.substr(sample.vcf.lastIndexOf('.') + 1);
 
-          if(bamExt !== ".bam"){
+          console.log("bamExt", bamExt);
+          console.log("vcfExt", vcfExt);
+
+          if(bamExt !== "bam"){
             message = "Error parsing config file.  Extension for bam file " + sample.bam + " was not recognized";
             bool = false;
           }
-          if(vcfExt !== ".vcf" || vcfExt !== ".gz" ){
+          if(vcfExt !== "vcf" || vcfExt !== "gz" ){
             message = "Error parsing config file.  Extension for vcf file " + sample.vcf + " was not recognized";
             bool = false;
           }
